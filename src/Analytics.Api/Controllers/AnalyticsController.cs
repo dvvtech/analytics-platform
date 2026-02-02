@@ -1,6 +1,5 @@
 ﻿
 using Analytics.Api.BLL.Abstract;
-using Analytics.Api.BLL.Services;
 using Analytics.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -163,7 +162,7 @@ namespace Analytics.Api.Controllers
 
             var ipAddress = GetClientIpAddress(HttpContext);
 
-            _logger.LogInformation($"call test: {ipAddress}");
+            _logger.LogInformation($"ip: {ipAddress}");
 
             return "123";
         }

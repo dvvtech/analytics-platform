@@ -1,4 +1,5 @@
-﻿using Analytics.Api.BLL.Abstract;
+﻿using Analytics.Api.AppStart.Extensions;
+using Analytics.Api.BLL.Abstract;
 using Analytics.Api.BLL.Services;
 using Analytics.Api.Configurations;
 using Analytics.Api.DAL;
@@ -21,6 +22,10 @@ namespace Analytics.Api.AppStart
             if (_builder.Environment.IsDevelopment())
             {
                 _builder.Services.AddSwaggerGen();
+            }
+            else
+            {
+                _builder.Services.ConfigureCors();
             }
 
             //InitConfigs();
