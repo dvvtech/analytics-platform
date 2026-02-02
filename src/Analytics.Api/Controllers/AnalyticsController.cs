@@ -99,28 +99,40 @@ namespace Analytics.Api.Controllers
 
         public static string GetClientIpAddress(HttpContext context)
         {
-            var ipAddress = string.Empty;
+            if (context == null) return null;
 
-            // Проверяем заголовки прокси
-            if (context.Request.Headers.TryGetValue("X-Forwarded-For", out var forwardedFor))
+            string ipAddress = null;
+
+            // Приоритетный порядок проверки заголовков
+            var headerKeys = new[]
             {
-                ipAddress = forwardedFor.FirstOrDefault();
+                "X-Forwarded-For",         // Стандартный для прокси
+                "X-Real-IP",               // Nginx прокси
+                "X-Client-IP",             // Custom
+                "CF-Connecting-IP",        // Cloudflare
+                //"HTTP_CLIENT_IP",          // Альтернативные названия
+                //"HTTP_X_FORWARDED_FOR",
+            };
+
+            foreach (var key in headerKeys)
+            {
+                if (context.Request.Headers.TryGetValue(key, out var value))
+                {
+                    ipAddress = value.ToString();
+                    if (!string.IsNullOrEmpty(ipAddress))
+                    {
+                        break;
+                    }
+                }
             }
 
-            // Если X-Forwarded-For пустой, проверяем другие заголовки
-            if (string.IsNullOrEmpty(ipAddress)
-                && context.Request.Headers.TryGetValue("X-Real-IP", out var realIp))
-            {
-                ipAddress = realIp.FirstOrDefault();
-            }
-
-            // Если заголовков нет, используем RemoteIpAddress
+            // Если заголовки не помогли, используем RemoteIpAddress
             if (string.IsNullOrEmpty(ipAddress))
             {
                 ipAddress = context.Connection.RemoteIpAddress?.ToString();
             }
 
-            // Очищаем IP от порта (если есть) и лишних данных
+            // Очистка IP
             return CleanIpAddress(ipAddress);
         }
 
@@ -129,21 +141,44 @@ namespace Analytics.Api.Controllers
             if (string.IsNullOrEmpty(ipAddress))
                 return ipAddress;
 
-            // Удаляем порт если есть (например, "192.168.1.1:1234")
+            // Для Swagger/Localhost запросов
+            if (ipAddress == "::1" || ipAddress == "127.0.0.1")
+            {
+                return "localhost";
+            }
+
+            // Если это IPv6 localhost
+            if (ipAddress.StartsWith("::ffff:127.0.0.1"))
+            {
+                return "localhost";
+            }
+
+            // Убираем порт
             var colonIndex = ipAddress.LastIndexOf(':');
             if (colonIndex > 0)
             {
-                var possibleIpv6 = ipAddress.Substring(0, colonIndex);
-                var possiblePort = ipAddress.Substring(colonIndex + 1);
-
-                // Проверяем, является ли часть после двоеточия портом
-                if (int.TryParse(possiblePort, out _))
+                // Проверяем IPv6 в квадратных скобках
+                if (ipAddress.Contains('[') && ipAddress.Contains(']'))
                 {
-                    return possibleIpv6;
+                    var endBracketIndex = ipAddress.LastIndexOf(']');
+                    if (endBracketIndex < colonIndex)
+                    {
+                        // Формат: [IPv6]:port
+                        return ipAddress.Substring(0, endBracketIndex + 1);
+                    }
+                }
+                else
+                {
+                    var possiblePort = ipAddress.Substring(colonIndex + 1);
+                    if (int.TryParse(possiblePort, out _))
+                    {
+                        // Формат: IPv4:port
+                        return ipAddress.Substring(0, colonIndex);
+                    }
                 }
             }
 
-            // Если несколько IP в X-Forwarded-For, берем первый
+            // Если несколько IP (цепочка прокси), берем первый
             var ips = ipAddress.Split(',', StringSplitOptions.RemoveEmptyEntries);
             return ips.FirstOrDefault()?.Trim();
         }

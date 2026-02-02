@@ -38,10 +38,17 @@ namespace Analytics.Api.BLL.Services
                 visit.Browser = browser;
                 visit.DeviceType = device;
 
-                if (!string.IsNullOrEmpty(ipAddress) && ipAddress != "::1" && ipAddress != ":")
+                if (!string.IsNullOrEmpty(ipAddress) && ipAddress != "::1" && ipAddress != ":" && ipAddress != "localhost")
                 {
-                    var countryName = await _geoService.GetCountryFromIp(ipAddress);
-                    visit.CountryName = countryName;
+                    try
+                    {
+                        var countryName = await _geoService.GetCountryFromIp(ipAddress);
+                        visit.CountryName = countryName;
+                    }
+                    catch (Exception)
+                    {
+                        _logger.LogError("Fail get country name");
+                    }
                 }
 
                 _dbContext.PageVisits.Add(visit);
