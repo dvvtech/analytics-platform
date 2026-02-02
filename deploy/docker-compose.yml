@@ -1,9 +1,9 @@
 services:
   mpp_tests_api:
-    container_name: mpp-tests-api-container
+    container_name: analytics-api-container
     build:
       context: ..
-      dockerfile: src/MppTests.Api/Dockerfile
+      dockerfile: src/Analytics.Api/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Prod
       - DatabaseOptions__ConnectionString=${ConnectionString_Key}      
@@ -13,12 +13,12 @@ services:
       - public-network
     labels:      
       - "traefik.enable=true"      
-      - "traefik.http.routers.mpp-tests-api.rule=Host(`api.cloud-platform.pro`) && PathPrefix(`/mpp-tests`)"      
-      - "traefik.http.routers.mpp-tests-api.entrypoints=websecure"      
-      - "traefik.http.routers.mpp-tests-api.tls.certresolver=letsencrypt"     
-      - "traefik.http.services.mpp-tests-api.loadbalancer.server.port=8080"
-      - "traefik.http.middlewares.mpp-tests-stripprefix.stripprefix.prefixes=/mpp-tests"
-      - "traefik.http.routers.mpp-tests-api.middlewares=mpp-tests-stripprefix"
+      - "traefik.http.routers.analytics-api.rule=Host(`api.cloud-platform.pro`) && PathPrefix(`/data-analyst`)"      
+      - "traefik.http.routers.analytics-api.entrypoints=websecure"      
+      - "traefik.http.routers.analytics-api.tls.certresolver=letsencrypt"     
+      - "traefik.http.services.analytics-api.loadbalancer.server.port=8080"
+      - "traefik.http.middlewares.analytics-stripprefix.stripprefix.prefixes=/data-analyst"
+      - "traefik.http.routers.analytics-api.middlewares=data-analyst-stripprefix"
 
 networks:
   public-network:
