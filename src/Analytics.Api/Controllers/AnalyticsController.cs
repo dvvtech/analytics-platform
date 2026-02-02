@@ -10,15 +10,18 @@ namespace Analytics.Api.Controllers
     [ApiController]
     public class AnalyticsController : ControllerBase
     {
+        private IAnalyticsService _analyticsService;
         private readonly ILogger<AnalyticsController> _logger;
-        private readonly IGeoLocationService _geoService;
+        //private readonly IGeoLocationService _geoService;
 
         public AnalyticsController(
-            IGeoLocationService geoService,
+            IAnalyticsService analyticsService,
+            //IGeoLocationService geoService,
             ILogger<AnalyticsController> logger)
         {
-            _geoService = geoService;
-            _logger = logger;
+            _analyticsService = analyticsService;
+            //_geoService = geoService;
+            //_logger = logger;
         }
 
         [HttpPost("track")]
@@ -26,29 +29,32 @@ namespace Analytics.Api.Controllers
         {
             //todo учитывать forward
             var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            var userAgent = Request.Headers["User-Agent"];
 
-            var visit = new PageVisit
-            {                               
-                Referrer = request.Referrer,
-                PageUrl = request.PageUrl,
-                VisitTime = DateTime.UtcNow
-            };
+            await _analyticsService.TrackVisitAsync(ipAddress, userAgent, request.Referrer, request.PageUrl);
 
-            // Парсим User-Agent
-            var (os, browser, device) = UserAgentParser.Parse(Request.Headers["User-Agent"].ToString());
-            visit.OperatingSystem = os;
-            visit.Browser = browser;
-            visit.DeviceType = device;
-            
-            // Определяем страну
-            if (!string.IsNullOrEmpty(ipAddress) && ipAddress != "::1")
-            {
-                var countryName = await _geoService.GetCountryFromIp(ipAddress);                
-                visit.CountryName = countryName;
-            }
+            //var visit = new PageVisit
+            //{                               
+            //    Referrer = request.Referrer,
+            //    PageUrl = request.PageUrl,
+            //    VisitTime = DateTime.UtcNow
+            //};
 
-            //_context.PageVisits.Add(visit);
-            //await _context.SaveChangesAsync();
+            //// Парсим User-Agent
+            //var (os, browser, device) = UserAgentParser.Parse(Request.Headers["User-Agent"].ToString());
+            //visit.OperatingSystem = os;
+            //visit.Browser = browser;
+            //visit.DeviceType = device;
+
+            //// Определяем страну
+            //if (!string.IsNullOrEmpty(ipAddress) && ipAddress != "::1")
+            //{
+            //    var countryName = await _geoService.GetCountryFromIp(ipAddress);                
+            //    visit.CountryName = countryName;
+            //}
+
+            ////_context.PageVisits.Add(visit);
+            ////await _context.SaveChangesAsync();
 
             return Ok();
         }

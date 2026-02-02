@@ -32,7 +32,7 @@ namespace Analytics.Api.AppStart
 
         private void InitConfigs()
         {
-            _builder.Services.Configure<DatabaseOptions>(_builder.Configuration.GetSection(DatabaseOptions.SectionName));
+            //_builder.Services.Configure<DatabaseOptions>(_builder.Configuration.GetSection(DatabaseOptions.SectionName));
 
             //_builder.Services
             //    .AddOptions<DatabaseOptions>()
@@ -46,7 +46,7 @@ namespace Analytics.Api.AppStart
             _builder.Services.AddDAL(_builder.Configuration);
         }
         private void RegisterServices()
-        {
+        {            
             _builder.Services.AddHttpClient("IpApi", client =>
             {
                 client.BaseAddress = new Uri("http://ip-api.com/json/");
@@ -58,6 +58,9 @@ namespace Analytics.Api.AppStart
                 var httpClient = httpClientFactory.CreateClient("IpApi");
                 return new IpApiGeoLocationService(httpClient);
             });
+
+
+            _builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
         }
     }

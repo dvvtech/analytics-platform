@@ -1,6 +1,5 @@
 ﻿using Analytics.Api.DAL.EFConfigurations;
 using Analytics.Api.DAL.Entities;
-using Analytics.Api.Models;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -18,11 +17,13 @@ namespace Analytics.Api.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            //base.OnModelCreating(modelBuilder);
 
             // Регистрация конфигураций
             modelBuilder.ApplyConfiguration(new PageVisitConfiguration());
             modelBuilder.ApplyConfiguration(new DailyStatConfiguration());
+
+            base.OnModelCreating(modelBuilder);
 
             // Глобальные настройки для всех строковых свойств
             //modelBuilder.UseCollation("en_US.utf8");
