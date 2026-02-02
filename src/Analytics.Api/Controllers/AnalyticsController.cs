@@ -26,36 +26,12 @@ namespace Analytics.Api.Controllers
 
         [HttpPost("track")]
         public async Task<IActionResult> TrackVisit([FromBody] VisitRequest request)
-        {
-            //todo учитывать forward
-            var ipAddress = GetClientIpAddress(HttpContext);//HttpContext.Connection.RemoteIpAddress?.ToString();
+        {            
+            var ipAddress = GetClientIpAddress(HttpContext);
 
             var userAgent = Request.Headers["User-Agent"];
 
             await _analyticsService.TrackVisitAsync(ipAddress, userAgent, request.Referrer, request.PageUrl);
-
-            //var visit = new PageVisit
-            //{                               
-            //    Referrer = request.Referrer,
-            //    PageUrl = request.PageUrl,
-            //    VisitTime = DateTime.UtcNow
-            //};
-
-            //// Парсим User-Agent
-            //var (os, browser, device) = UserAgentParser.Parse(Request.Headers["User-Agent"].ToString());
-            //visit.OperatingSystem = os;
-            //visit.Browser = browser;
-            //visit.DeviceType = device;
-
-            //// Определяем страну
-            //if (!string.IsNullOrEmpty(ipAddress) && ipAddress != "::1")
-            //{
-            //    var countryName = await _geoService.GetCountryFromIp(ipAddress);                
-            //    visit.CountryName = countryName;
-            //}
-
-            ////_context.PageVisits.Add(visit);
-            ////await _context.SaveChangesAsync();
 
             return Ok();
         }
@@ -187,6 +163,11 @@ namespace Analytics.Api.Controllers
         public string Test()
         {
             _logger.LogInformation("call test");
+
+            var ipAddress = GetClientIpAddress(HttpContext);
+
+            _logger.LogInformation($"call test: {ipAddress}");
+
             return "123";
         }
     }
