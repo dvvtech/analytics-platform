@@ -24,6 +24,7 @@ namespace Analytics.Api.Controllers
         [HttpPost("track")]
         public async Task<IActionResult> TrackVisit([FromBody] VisitRequest request)
         {
+            //todo учитывать forward
             var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
             var visit = new PageVisit
@@ -49,7 +50,7 @@ namespace Analytics.Api.Controllers
             //_context.PageVisits.Add(visit);
             //await _context.SaveChangesAsync();
 
-            return Ok(new { visitId = visit.Id });
+            return Ok();
         }
 
         //[HttpGet("stats")]

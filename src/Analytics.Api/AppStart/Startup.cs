@@ -1,5 +1,10 @@
 ﻿using Analytics.Api.BLL.Abstract;
 using Analytics.Api.BLL.Services;
+using Analytics.Api.Configurations;
+using Analytics.Api.DAL;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Analytics.Api.AppStart
 {
@@ -19,12 +24,33 @@ namespace Analytics.Api.AppStart
                 _builder.Services.AddSwaggerGen();
             }
 
-            //InitConfigs();
+            InitConfigs();
             RegisterServices();
-            
+            SetupDb();
+
             _builder.Services.AddControllers();
         }
 
+        private void InitConfigs()
+        {
+            _builder.Services.Configure<DatabaseOptions>(_builder.Configuration.GetSection(DatabaseOptions.SectionName));
+
+            //_builder.Services
+            //    .AddOptions<DatabaseOptions>()
+            //    .BindConfiguration(nameof(DatabaseOptions))
+            //    .ValidateDataAnnotations()
+            //    .ValidateOnStart();
+        }
+
+        private void SetupDb()
+        {
+            _builder.Services.AddDbContext<AnalyticsDbContext>((serviceProvider, options) =>
+            {
+                var dbOptions = serviceProvider.GetRequiredService<IOptions<DatabaseOptions>>().Value;
+
+                options.UseNpgsql(dbOptions.ConnectionString);
+            });
+        }
         private void RegisterServices()
         {
             _builder.Services.AddHttpClient("IpApi", client =>
