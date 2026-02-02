@@ -7,9 +7,8 @@ namespace Analytics.Api.BLL.Services
         private readonly HttpClient _httpClient;
 
         public IpApiGeoLocationService(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri("http://ip-api.com/json/");
+        {            
+            _httpClient = httpClient;            
         }
 
         public async Task<(string CountryCode, string CountryName)> GetCountryFromIp(string ipAddress)
