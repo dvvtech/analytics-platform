@@ -42,7 +42,7 @@ namespace Analytics.Api.DAL.EFConfigurations
             builder.HasIndex(e => new { e.StatDate, e.CountryCode, e.OperatingSystem })
                 .IsUnique()
                 .HasDatabaseName("uq_dailystats_date_country_os")
-                .HasFilter("[CountryCode] IS NOT NULL AND [OperatingSystem] IS NOT NULL");
+                .HasFilter(@"""CountryCode"" IS NOT NULL AND ""OperatingSystem"" IS NOT NULL");
 
             // Индексы для быстрого поиска
             builder.HasIndex(e => e.StatDate)
