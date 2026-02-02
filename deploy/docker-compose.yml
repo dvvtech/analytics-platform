@@ -1,5 +1,5 @@
 services:
-  mpp_tests_api:
+  analytics_api:
     container_name: analytics-api-container
     build:
       context: ..
