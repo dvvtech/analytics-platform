@@ -2,11 +2,7 @@
 {
     public class PageVisit
     {
-        public long Id { get; set; }
-        public string SessionId { get; set; }
-        public string IpAddress { get; set; }
-        public string UserAgent { get; set; }
-        public string CountryCode { get; set; }
+        public long Id { get; set; }                
         public string CountryName { get; set; }
         public string OperatingSystem { get; set; }
         public string Browser { get; set; }
@@ -19,7 +15,14 @@
 
     public class VisitRequest
     {
+        /// <summary>
+        /// URL страницы, которую посещает пользователь
+        /// </summary>
         public string PageUrl { get; set; }
+
+        /// <summary>
+        /// URL страницы, с которой пользователь перешел на текущую страницу
+        /// </summary>
         public string Referrer { get; set; }
     }
 }

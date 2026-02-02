@@ -24,27 +24,25 @@ namespace Analytics.Api.Controllers
         [HttpPost("track")]
         public async Task<IActionResult> TrackVisit([FromBody] VisitRequest request)
         {
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+
             var visit = new PageVisit
-            {               
-                IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString(),
-                UserAgent = Request.Headers["User-Agent"].ToString(),
+            {                               
                 Referrer = request.Referrer,
                 PageUrl = request.PageUrl,
                 VisitTime = DateTime.UtcNow
             };
 
             // Парсим User-Agent
-            var (os, browser, device) = UserAgentParser.Parse(visit.UserAgent);
+            var (os, browser, device) = UserAgentParser.Parse(Request.Headers["User-Agent"].ToString());
             visit.OperatingSystem = os;
             visit.Browser = browser;
             visit.DeviceType = device;
-
-            visit.IpAddress = "94.19.16.117";
+            
             // Определяем страну
-            if (!string.IsNullOrEmpty(visit.IpAddress) && visit.IpAddress != "::1")
+            if (!string.IsNullOrEmpty(ipAddress) && ipAddress != "::1")
             {
-                var (countryCode, countryName) = await _geoService.GetCountryFromIp(visit.IpAddress);
-                visit.CountryCode = countryCode;
+                var countryName = await _geoService.GetCountryFromIp(ipAddress);                
                 visit.CountryName = countryName;
             }
 

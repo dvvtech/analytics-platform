@@ -2,6 +2,6 @@
 {
     public interface IGeoLocationService
     {
-        Task<(string CountryCode, string CountryName)> GetCountryFromIp(string ipAddress);
+        Task<string> GetCountryFromIp(string ipAddress);
     }
 }

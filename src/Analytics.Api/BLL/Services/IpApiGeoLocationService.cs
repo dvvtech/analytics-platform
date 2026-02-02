@@ -11,16 +11,16 @@ namespace Analytics.Api.BLL.Services
             _httpClient = httpClient;            
         }
 
-        public async Task<(string CountryCode, string CountryName)> GetCountryFromIp(string ipAddress)
+        public async Task<string> GetCountryFromIp(string ipAddress)
         {
             try
             {
                 var response = await _httpClient.GetFromJsonAsync<IpApiResponse>(ipAddress);
-                return (response.CountryCode, response.Country);
+                return response.Country;
             }
             catch
             {
-                return ("UN", "Unknown");
+                return "Unknown";
             }
         }
 
