@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Analytics.Api.DAL;
+using Analytics.Migrator;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 var environmentName = args.FirstOrDefault() ??
@@ -12,4 +14,18 @@ var configuration = new ConfigurationBuilder()
 
 var serviceCollection = new ServiceCollection();
 serviceCollection.AddSingleton<IConfiguration>(configuration);
-//serviceCollection.AddTransient<MigrationService>();
+serviceCollection.AddTransient<MigrationService>();
+serviceCollection.AddDAL(configuration);
+
+var serviceProvider = serviceCollection.BuildServiceProvider();
+
+try
+{
+    var migrationService = serviceProvider.GetRequiredService<MigrationService>();
+    await migrationService.MigrateAsync(CancellationToken.None);
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Critical error during migration: {ex.Message}");
+    throw;
+}

@@ -3,7 +3,6 @@ using Analytics.Api.BLL.Services;
 using Analytics.Api.Configurations;
 using Analytics.Api.DAL;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace Analytics.Api.AppStart
@@ -24,7 +23,7 @@ namespace Analytics.Api.AppStart
                 _builder.Services.AddSwaggerGen();
             }
 
-            InitConfigs();
+            //InitConfigs();
             RegisterServices();
             SetupDb();
 
@@ -44,12 +43,7 @@ namespace Analytics.Api.AppStart
 
         private void SetupDb()
         {
-            _builder.Services.AddDbContext<AnalyticsDbContext>((serviceProvider, options) =>
-            {
-                var dbOptions = serviceProvider.GetRequiredService<IOptions<DatabaseOptions>>().Value;
-
-                options.UseNpgsql(dbOptions.ConnectionString);
-            });
+            _builder.Services.AddDAL(_builder.Configuration);
         }
         private void RegisterServices()
         {
