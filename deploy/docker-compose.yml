@@ -17,7 +17,7 @@ services:
       - "traefik.http.routers.analytics-api.entrypoints=websecure"      
       - "traefik.http.routers.analytics-api.tls.certresolver=letsencrypt"     
       - "traefik.http.services.analytics-api.loadbalancer.server.port=8080"
-      - "traefik.http.middlewares.analytics-stripprefix.stripprefix.prefixes=/data-analyst"
+      - "traefik.http.middlewares.data-analyst-stripprefix.stripprefix.prefixes=/data-analyst"
       - "traefik.http.routers.analytics-api.middlewares=data-analyst-stripprefix"
 
 networks:
