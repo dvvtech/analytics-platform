@@ -11,17 +11,14 @@ namespace Analytics.Api.Controllers
     public class AnalyticsController : ControllerBase
     {
         private IAnalyticsService _analyticsService;
-        private readonly ILogger<AnalyticsController> _logger;
-        //private readonly IGeoLocationService _geoService;
+        private readonly ILogger<AnalyticsController> _logger;        
 
         public AnalyticsController(
-            IAnalyticsService analyticsService,
-            //IGeoLocationService geoService,
+            IAnalyticsService analyticsService,            
             ILogger<AnalyticsController> logger)
         {
-            _analyticsService = analyticsService;
-            //_geoService = geoService;
-            //_logger = logger;
+            _analyticsService = analyticsService;            
+            _logger = logger;
         }
 
         [HttpPost("track")]
