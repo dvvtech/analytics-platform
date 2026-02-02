@@ -28,7 +28,8 @@ namespace Analytics.Api.Controllers
         public async Task<IActionResult> TrackVisit([FromBody] VisitRequest request)
         {
             //todo учитывать forward
-            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            var ipAddress = GetClientIpAddress(HttpContext);//HttpContext.Connection.RemoteIpAddress?.ToString();
+
             var userAgent = Request.Headers["User-Agent"];
 
             await _analyticsService.TrackVisitAsync(ipAddress, userAgent, request.Referrer, request.PageUrl);
@@ -95,6 +96,57 @@ namespace Analytics.Api.Controllers
 
         //    return Ok(stats);
         //}
+
+        public static string GetClientIpAddress(HttpContext context)
+        {
+            var ipAddress = string.Empty;
+
+            // Проверяем заголовки прокси
+            if (context.Request.Headers.TryGetValue("X-Forwarded-For", out var forwardedFor))
+            {
+                ipAddress = forwardedFor.FirstOrDefault();
+            }
+
+            // Если X-Forwarded-For пустой, проверяем другие заголовки
+            if (string.IsNullOrEmpty(ipAddress)
+                && context.Request.Headers.TryGetValue("X-Real-IP", out var realIp))
+            {
+                ipAddress = realIp.FirstOrDefault();
+            }
+
+            // Если заголовков нет, используем RemoteIpAddress
+            if (string.IsNullOrEmpty(ipAddress))
+            {
+                ipAddress = context.Connection.RemoteIpAddress?.ToString();
+            }
+
+            // Очищаем IP от порта (если есть) и лишних данных
+            return CleanIpAddress(ipAddress);
+        }
+
+        private static string CleanIpAddress(string ipAddress)
+        {
+            if (string.IsNullOrEmpty(ipAddress))
+                return ipAddress;
+
+            // Удаляем порт если есть (например, "192.168.1.1:1234")
+            var colonIndex = ipAddress.LastIndexOf(':');
+            if (colonIndex > 0)
+            {
+                var possibleIpv6 = ipAddress.Substring(0, colonIndex);
+                var possiblePort = ipAddress.Substring(colonIndex + 1);
+
+                // Проверяем, является ли часть после двоеточия портом
+                if (int.TryParse(possiblePort, out _))
+                {
+                    return possibleIpv6;
+                }
+            }
+
+            // Если несколько IP в X-Forwarded-For, берем первый
+            var ips = ipAddress.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            return ips.FirstOrDefault()?.Trim();
+        }
 
         [HttpGet]
         public string Test()

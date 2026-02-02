@@ -1,6 +1,6 @@
-﻿using Analytics.Api.BLL.Abstract;
+﻿
+using Analytics.Api.BLL.Abstract;
 using Analytics.Api.DAL;
-
 using Analytics.Api.DAL.Entities;
 
 namespace Analytics.Api.BLL.Services
@@ -38,7 +38,7 @@ namespace Analytics.Api.BLL.Services
                 visit.Browser = browser;
                 visit.DeviceType = device;
 
-                if (!string.IsNullOrEmpty(ipAddress) && ipAddress != "::1")
+                if (!string.IsNullOrEmpty(ipAddress) && ipAddress != "::1" && ipAddress != ":")
                 {
                     var countryName = await _geoService.GetCountryFromIp(ipAddress);
                     visit.CountryName = countryName;
