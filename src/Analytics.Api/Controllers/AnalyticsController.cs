@@ -27,6 +27,8 @@ namespace Analytics.Api.Controllers
 
             var userAgent = Request.Headers["User-Agent"];
 
+            _logger.LogInformation($"userAgent: {userAgent}");
+
             await _analyticsService.TrackVisitAsync(ipAddress, userAgent, request.Referrer, request.PageUrl);
 
             return Ok();
