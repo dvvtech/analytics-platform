@@ -10,6 +10,8 @@ namespace Analytics.Api.DAL
         public DbSet<PageVisitEntity> PageVisits { get; set; }
         public DbSet<DailyStatEntity> DailyStats { get; set; }
 
+        public DbSet<OfftubeTechEntity> OfftubeTech { get; set; }
+
         public AnalyticsDbContext(DbContextOptions<AnalyticsDbContext> options)
             : base(options)
         {
@@ -22,6 +24,7 @@ namespace Analytics.Api.DAL
             // Регистрация конфигураций
             modelBuilder.ApplyConfiguration(new PageVisitConfiguration());
             modelBuilder.ApplyConfiguration(new DailyStatConfiguration());
+            modelBuilder.ApplyConfiguration(new OfftubeTechConfiguration());
 
             base.OnModelCreating(modelBuilder);
 

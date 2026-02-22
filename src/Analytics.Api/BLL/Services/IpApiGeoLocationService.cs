@@ -11,11 +11,24 @@ namespace Analytics.Api.BLL.Services
             _httpClient = httpClient;            
         }
 
+        public async Task<LocationInfo> GetLocationFromIp(string ipAddress)
+        {
+            try
+            {
+                var response = await _httpClient.GetFromJsonAsync<LocationInfo>($"{ipAddress}?fields=country,countryCode,city");
+                return response;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public async Task<string> GetCountryFromIp(string ipAddress)
         {
             try
             {
-                var response = await _httpClient.GetFromJsonAsync<IpApiResponse>(ipAddress);
+                var response = await _httpClient.GetFromJsonAsync<LocationInfo>($"{ipAddress}?fields=country,countryCode");
                 return response.Country;
             }
             catch
@@ -24,10 +37,14 @@ namespace Analytics.Api.BLL.Services
             }
         }
 
-        private class IpApiResponse
+        public class LocationInfo
         {
             public string Country { get; set; }
             public string CountryCode { get; set; }
+
+            public string City { get; set; }
+
+
         }
     }
 }
