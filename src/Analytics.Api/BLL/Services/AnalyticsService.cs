@@ -21,7 +21,7 @@ namespace Analytics.Api.BLL.Services
             _logger = logger;
         }
 
-        public async Task TrackVisitOfftubeTechAsync(string ipAddress, string userAgent, string referrer, string pageUrl)
+        public async Task TrackVisitOfftubeTechAsync(string ipAddress, string userAgent)
         {
             try
             {

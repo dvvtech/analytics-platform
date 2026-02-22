@@ -2,6 +2,8 @@
 {
     public interface IAnalyticsService
     {
+        Task TrackVisitOfftubeTechAsync(string ipAddress, string userAgent);
+
         Task TrackVisitAsync(string ipAddress, string userAgent, string referrer, string pageUrl);
     }
 }
