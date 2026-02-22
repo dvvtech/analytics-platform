@@ -23,6 +23,8 @@ namespace Analytics.Api.Controllers
         [HttpGet("track-offtube-tech")]
         public async Task<IActionResult> TrackVisitOfftubeTech()
         {
+            _logger.LogInformation("track-offtube-tech");
+
             var ipAddress = GetClientIpAddress(HttpContext);
 
             var userAgent = Request.Headers["User-Agent"];
@@ -97,9 +99,7 @@ namespace Analytics.Api.Controllers
                 "X-Forwarded-For",         // Стандартный для прокси
                 "X-Real-IP",               // Nginx прокси
                 "X-Client-IP",             // Custom
-                "CF-Connecting-IP",        // Cloudflare
-                //"HTTP_CLIENT_IP",          // Альтернативные названия
-                //"HTTP_X_FORWARDED_FOR",
+                "CF-Connecting-IP"        // Cloudflare                
             };
 
             foreach (var key in headerKeys)
