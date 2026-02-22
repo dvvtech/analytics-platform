@@ -39,6 +39,10 @@ namespace Analytics.Api.DAL.EFConfigurations
                 .HasMaxLength(50)
                 .IsRequired(false);
 
+            builder.Property(e => e.MediaUrl)
+                .HasMaxLength(350)
+                .IsRequired(false);
+
             builder.Property(e => e.VisitTimeUTC)
                 .IsRequired()
                 .HasDefaultValueSql("NOW()")
