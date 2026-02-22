@@ -12,7 +12,7 @@
                 options.AddPolicy(AllowSpecificOriginPolicy,
                     policy =>
                     {
-                        policy.WithOrigins("https://oxford-ap.com")
+                        policy.WithOrigins("https://oxford-ap.com", "https://offtube.tech")
                               //.AllowCredentials() // Разрешить куки
                               .AllowAnyHeader()
                               .AllowAnyMethod();
@@ -25,7 +25,6 @@
                           .AllowAnyMethod()  // Разрешить любые HTTP-методы (GET, POST, PUT и т. д.)
                           .AllowAnyHeader(); // Разрешить любые заголовки
                 });
-
             });
         }
 
