@@ -24,16 +24,14 @@ namespace Analytics.Api.BLL.Services
         public async Task TrackVisitOfftubeTechAsync(string ipAddress, string userAgent)
         {
             try
-            {
-                var visit = new OfftubeTechEntity();
-                //{                    
-                //    VisitTimeUTC = DateTime.UtcNow,                 
-                //};
-
+            {                                
                 var (os, browser, device) = UserAgentParser.Parse(userAgent);
-                visit.OperatingSystem = os;
-                visit.Browser = browser;
-                visit.DeviceType = device;
+                var visit = new OfftubeTechEntity()
+                {
+                    OperatingSystem = os,
+                    Browser = browser,
+                    DeviceType = device
+                };
 
                 if (!string.IsNullOrEmpty(ipAddress) && ipAddress != "::1" && ipAddress != ":" && ipAddress != "localhost")
                 {
