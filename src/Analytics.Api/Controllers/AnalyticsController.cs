@@ -28,10 +28,11 @@ namespace Analytics.Api.Controllers
             var ipAddress = GetClientIpAddress(HttpContext);
 
             var userAgent = Request.Headers["User-Agent"];
+            var mediaUrl = Request.Headers["X-Media-Url"];
 
             _logger.LogInformation($"userAgent: {userAgent}");
 
-            await _analyticsService.TrackVisitOfftubeTechAsync(ipAddress, userAgent);
+            await _analyticsService.TrackVisitOfftubeTechAsync(ipAddress, userAgent, mediaUrl);
 
             return Ok();
         }

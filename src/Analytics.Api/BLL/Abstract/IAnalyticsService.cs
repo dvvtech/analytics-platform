@@ -2,7 +2,7 @@
 {
     public interface IAnalyticsService
     {
-        Task TrackVisitOfftubeTechAsync(string ipAddress, string userAgent);
+        Task TrackVisitOfftubeTechAsync(string ipAddress, string userAgent, string mediaUrl);
 
         Task TrackVisitAsync(string ipAddress, string userAgent, string referrer, string pageUrl);
     }

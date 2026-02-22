@@ -21,7 +21,7 @@ namespace Analytics.Api.BLL.Services
             _logger = logger;
         }
 
-        public async Task TrackVisitOfftubeTechAsync(string ipAddress, string userAgent)
+        public async Task TrackVisitOfftubeTechAsync(string ipAddress, string userAgent, string mediaUrl)
         {
             try
             {                                
@@ -30,7 +30,8 @@ namespace Analytics.Api.BLL.Services
                 {
                     OperatingSystem = os,
                     Browser = browser,
-                    DeviceType = device
+                    DeviceType = device,
+                    MediaUrl = mediaUrl
                 };
 
                 if (!string.IsNullOrEmpty(ipAddress) && ipAddress != "::1" && ipAddress != ":" && ipAddress != "localhost")
@@ -39,7 +40,7 @@ namespace Analytics.Api.BLL.Services
                     {
                         var location = await _geoService.GetLocationFromIp(ipAddress);
                         visit.Country = location.Country;
-                        visit.City = location.City;
+                        visit.City = location.City;                        
                     }
                     catch (Exception)
                     {
@@ -52,7 +53,7 @@ namespace Analytics.Api.BLL.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError("TrackVisit error", ex);
+                _logger.LogError("TrackVisit add error", ex);
             }
         }
 
