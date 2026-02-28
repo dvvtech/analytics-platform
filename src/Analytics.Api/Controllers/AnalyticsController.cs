@@ -32,7 +32,7 @@ namespace Analytics.Api.Controllers
 
             _logger.LogInformation($"userAgent: {userAgent}");
 
-            await _analyticsService.TrackVisitOfftubeTechAsync(ipAddress, userAgent, operation);
+            await _analyticsService.TrackVisitMppTestAsync(ipAddress, userAgent, operation);
 
             return Ok();
         }
