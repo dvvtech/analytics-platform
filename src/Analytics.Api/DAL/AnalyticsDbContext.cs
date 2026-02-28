@@ -2,7 +2,6 @@
 using Analytics.Api.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Analytics.Api.DAL
 {
     public class AnalyticsDbContext : DbContext
@@ -11,6 +10,8 @@ namespace Analytics.Api.DAL
         public DbSet<DailyStatEntity> DailyStats { get; set; }
 
         public DbSet<OfftubeTechEntity> OfftubeTech { get; set; }
+
+        public DbSet<MppTestsEntity> MppTests { get; set; }
 
         public AnalyticsDbContext(DbContextOptions<AnalyticsDbContext> options)
             : base(options)
@@ -25,6 +26,7 @@ namespace Analytics.Api.DAL
             modelBuilder.ApplyConfiguration(new PageVisitConfiguration());
             modelBuilder.ApplyConfiguration(new DailyStatConfiguration());
             modelBuilder.ApplyConfiguration(new OfftubeTechConfiguration());
+            modelBuilder.ApplyConfiguration(new MppTestsEntityConfiguration());
 
             base.OnModelCreating(modelBuilder);
 
