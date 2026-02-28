@@ -20,6 +20,23 @@ namespace Analytics.Api.Controllers
             _logger = logger;
         }
 
+        [HttpGet("track-mpptests")]
+        public async Task<IActionResult> TrackVisitMppTests()
+        {
+            _logger.LogInformation("track-mpptests");
+
+            var ipAddress = GetClientIpAddress(HttpContext);
+
+            var userAgent = Request.Headers["User-Agent"];
+            var operation = Request.Headers["X-Operation-Type"];
+
+            _logger.LogInformation($"userAgent: {userAgent}");
+
+            await _analyticsService.TrackVisitOfftubeTechAsync(ipAddress, userAgent, operation);
+
+            return Ok();
+        }
+
         [HttpGet("track-offtube-tech")]
         public async Task<IActionResult> TrackVisitOfftubeTech()
         {

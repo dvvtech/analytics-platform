@@ -28,6 +28,9 @@ namespace Analytics.Api.AppStart
                 _builder.Services.ConfigureCors();
             }
 
+            // Регистрация HttpClientFactory
+            _builder.Services.AddHttpClient();
+
             //InitConfigs();
             RegisterServices();
             SetupDb();

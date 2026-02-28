@@ -21,6 +21,42 @@ namespace Analytics.Api.BLL.Services
             _logger = logger;
         }
 
+        public async Task TrackVisitMppTestAsync(string ipAddress, string userAgent, string operation)
+        {
+            try
+            {
+                var (os, browser, device) = UserAgentParser.Parse(userAgent);
+                var visit = new MppTestsEntity()
+                {
+                    OperatingSystem = os,
+                    Browser = browser,
+                    DeviceType = device,
+                    Operation = operation
+                };
+
+                if (!string.IsNullOrEmpty(ipAddress) && ipAddress != "::1" && ipAddress != ":" && ipAddress != "localhost")
+                {
+                    try
+                    {
+                        var location = await _geoService.GetLocationFromIp(ipAddress);
+                        visit.Country = location.Country;
+                        visit.City = location.City;
+                    }
+                    catch (Exception)
+                    {
+                        _logger.LogError("Fail get country name");
+                    }
+                }
+
+                _dbContext.MppTests.Add(visit);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("TrackVisit mppTests add error", ex);
+            }
+        }
+
         public async Task TrackVisitOfftubeTechAsync(string ipAddress, string userAgent, string mediaUrl)
         {
             try
@@ -53,7 +89,7 @@ namespace Analytics.Api.BLL.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError("TrackVisit add error", ex);
+                _logger.LogError("TrackVisit offtube add error", ex);
             }
         }
 
