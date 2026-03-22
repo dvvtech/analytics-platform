@@ -13,6 +13,8 @@ namespace Analytics.Api.DAL
 
         public DbSet<MppTestsEntity> MppTests { get; set; }
 
+        public DbSet<LinkSummaryEntity> linkSummary { get; set; }
+
         public AnalyticsDbContext(DbContextOptions<AnalyticsDbContext> options)
             : base(options)
         {
@@ -27,6 +29,7 @@ namespace Analytics.Api.DAL
             modelBuilder.ApplyConfiguration(new DailyStatConfiguration());
             modelBuilder.ApplyConfiguration(new OfftubeTechConfiguration());
             modelBuilder.ApplyConfiguration(new MppTestsEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new LinkSummaryConfiguration());
 
             base.OnModelCreating(modelBuilder);
 

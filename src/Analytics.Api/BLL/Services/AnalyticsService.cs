@@ -21,6 +21,41 @@ namespace Analytics.Api.BLL.Services
             _logger = logger;
         }
 
+        public async Task TrackVisitLinkSummaryAsync(string ipAddress, string userAgent)
+        {
+            try
+            {
+                var (os, browser, device) = UserAgentParser.Parse(userAgent);
+                var visit = new LinkSummaryEntity()
+                {
+                    OperatingSystem = os,
+                    Browser = browser,
+                    DeviceType = device,                    
+                };
+
+                if (!string.IsNullOrEmpty(ipAddress) && ipAddress != "::1" && ipAddress != ":" && ipAddress != "localhost")
+                {
+                    try
+                    {
+                        var location = await _geoService.GetLocationFromIp(ipAddress);
+                        visit.Country = location.Country;
+                        visit.City = location.City;
+                    }
+                    catch (Exception)
+                    {
+                        _logger.LogError("Fail get country name");
+                    }
+                }
+
+                _dbContext.linkSummary.Add(visit);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("TrackVisit link summary add error", ex);
+            }
+        }
+
         public async Task TrackVisitMppTestAsync(string ipAddress, string userAgent, string operation)
         {
             try

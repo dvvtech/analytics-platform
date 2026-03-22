@@ -2,6 +2,8 @@
 {
     public interface IAnalyticsService
     {
+        Task TrackVisitLinkSummaryAsync(string ipAddress, string userAgent);
+
         Task TrackVisitMppTestAsync(string ipAddress, string userAgent, string operation);
 
         Task TrackVisitOfftubeTechAsync(string ipAddress, string userAgent, string mediaUrl);
