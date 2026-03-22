@@ -27,11 +27,12 @@ namespace Analytics.Api.Controllers
 
             var ipAddress = GetClientIpAddress(HttpContext);
 
-            var userAgent = Request.Headers["User-Agent"];            
+            var userAgent = Request.Headers["User-Agent"];
+            var link = Request.Headers["X-Operation-Link"];
 
             _logger.LogInformation($"userAgent: {userAgent}");
 
-            await _analyticsService.TrackVisitLinkSummaryAsync(ipAddress, userAgent);
+            await _analyticsService.TrackVisitLinkSummaryAsync(ipAddress, userAgent, link);
 
             return Ok();
         }

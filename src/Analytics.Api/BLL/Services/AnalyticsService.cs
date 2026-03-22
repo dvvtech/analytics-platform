@@ -21,7 +21,7 @@ namespace Analytics.Api.BLL.Services
             _logger = logger;
         }
 
-        public async Task TrackVisitLinkSummaryAsync(string ipAddress, string userAgent)
+        public async Task TrackVisitLinkSummaryAsync(string ipAddress, string userAgent, string link)
         {
             try
             {
@@ -30,7 +30,8 @@ namespace Analytics.Api.BLL.Services
                 {
                     OperatingSystem = os,
                     Browser = browser,
-                    DeviceType = device,                    
+                    DeviceType = device,
+                    Link = link
                 };
 
                 if (!string.IsNullOrEmpty(ipAddress) && ipAddress != "::1" && ipAddress != ":" && ipAddress != "localhost")

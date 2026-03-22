@@ -2,7 +2,7 @@
 {
     public interface IAnalyticsService
     {
-        Task TrackVisitLinkSummaryAsync(string ipAddress, string userAgent);
+        Task TrackVisitLinkSummaryAsync(string ipAddress, string userAgent, string link);
 
         Task TrackVisitMppTestAsync(string ipAddress, string userAgent, string operation);
 
