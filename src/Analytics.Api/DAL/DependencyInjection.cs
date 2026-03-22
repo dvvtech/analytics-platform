@@ -13,7 +13,7 @@ namespace Analytics.Api.DAL
             services.AddDbContextFactory<AnalyticsDbContext>((serviceProvider, options) =>
             {
                 var dbOptions = serviceProvider.GetRequiredService<IOptions<DatabaseOptions>>().Value;
-                options.UseNpgsql(dbOptions.ConnectionString);
+                options.UseNpgsql("User ID=postgres;Password=curMal7Hof!;Host=176.108.255.113;Port=5432;Database=web-analytics");
             });
 
             return services;
