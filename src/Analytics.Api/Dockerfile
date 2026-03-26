@@ -7,6 +7,13 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
+# Установка Kerberos библиотек для Ubuntu 24.04
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    libgssapi-krb5-2 \
+    libkrb5-3 \
+    libk5crypto3 \
+    && rm -rf /var/lib/apt/lists/*
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
