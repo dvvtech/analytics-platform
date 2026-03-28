@@ -14,14 +14,35 @@ namespace Analytics.Api.DAL
             {
                 var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
                 var dbOptions = serviceProvider.GetRequiredService<IOptions<DatabaseOptions>>().Value;
-                if (logger != null)
+                
+                var env = serviceProvider.GetRequiredService<IWebHostEnvironment>();
+                if (!env.IsDevelopment())
                 {
-                    logger.LogInformation("connection string: " + dbOptions.ConnectionString);
+                    var cs = GetConnectionStringFromSecret();
+                    if (logger != null)
+                    {
+                        logger.LogInformation("connection string: " + cs);
+                    }
+                    options.UseNpgsql(cs);
                 }
-                options.UseNpgsql(dbOptions.ConnectionString);
+                else
+                {
+                    options.UseNpgsql(dbOptions.ConnectionString);
+                }
             });
 
             return services;
+        }
+
+        private static string GetConnectionStringFromSecret()
+        {
+            var secretsPath = "/run/secrets";
+            var ipFile = Path.Combine(secretsPath, "analytics_connection_string");
+            if (File.Exists(ipFile))
+            {
+                return File.ReadAllText(ipFile).Trim();                
+            }
+            return "";
         }
     }
 }

@@ -6,6 +6,8 @@ services:
       - DatabaseOptions__ConnectionString=${ConnectionString_Key}                
     networks:
       - public-network5
+    secrets:      
+      - analytics_connection_string
     deploy:
       mode: replicated
       replicas: 1
@@ -22,4 +24,8 @@ services:
 
 networks:
   public-network5:
+    external: true
+
+secrets:  
+  analytics_connection_string:
     external: true
