@@ -1,25 +1,25 @@
 services:
   analytics_api:
-    container_name: analytics-api-container
-    build:
-      context: ..
-      dockerfile: src/Analytics.Api/Dockerfile
+    image: ghcr.io/dvvtech/analytics-platform:latest
     environment:
       - ASPNETCORE_ENVIRONMENT=Prod
-      - DatabaseOptions__ConnectionString=${ConnectionString_Key}      
-      
-    restart: unless-stopped    
+      - DatabaseOptions__ConnectionString=${ConnectionString_Key}                
     networks:
-      - public-network
-    labels:      
-      - "traefik.enable=true"      
-      - "traefik.http.routers.analytics-api.rule=Host(`api.cloud-platform.pro`) && PathPrefix(`/data-analyst`)"      
-      - "traefik.http.routers.analytics-api.entrypoints=websecure"      
-      - "traefik.http.routers.analytics-api.tls.certresolver=letsencrypt"     
-      - "traefik.http.services.analytics-api.loadbalancer.server.port=8080"
-      - "traefik.http.middlewares.data-analyst-stripprefix.stripprefix.prefixes=/data-analyst"
-      - "traefik.http.routers.analytics-api.middlewares=data-analyst-stripprefix"
+      - public-network5
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      labels:      
+        - "traefik.enable=true"      
+        - "traefik.http.routers.analytics-api.rule=Host(`api.cloud-platform.pro`) && PathPrefix(`/data-analyst`)"      
+        - "traefik.http.routers.analytics-api.entrypoints=websecure"      
+        - "traefik.http.routers.analytics-api.tls.certresolver=letsencrypt"     
+        - "traefik.http.services.analytics-api.loadbalancer.server.port=8080"
+        - "traefik.http.middlewares.data-analyst-stripprefix.stripprefix.prefixes=/data-analyst"
+        - "traefik.http.routers.analytics-api.middlewares=data-analyst-stripprefix"
 
 networks:
-  public-network:
+  public-network5:
     external: true
