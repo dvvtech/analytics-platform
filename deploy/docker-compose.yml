@@ -2,8 +2,7 @@ services:
   analytics_api:
     image: ghcr.io/dvvtech/analytics-platform:latest
     environment:
-      - ASPNETCORE_ENVIRONMENT=Prod
-      - DatabaseOptions__ConnectionString=${ConnectionString_Key}                
+      - ASPNETCORE_ENVIRONMENT=Prod                 
     networks:
       - public-network5
     secrets:      
