@@ -67,9 +67,7 @@ namespace Analytics.Api.AppStart
                 return new IpApiGeoLocationService(httpClient);
             });
 
-
             _builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
-
         }
     }
 }
