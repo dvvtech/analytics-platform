@@ -12,7 +12,12 @@ namespace Analytics.Api.DAL
 
             services.AddDbContextFactory<AnalyticsDbContext>((serviceProvider, options) =>
             {
+                var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
                 var dbOptions = serviceProvider.GetRequiredService<IOptions<DatabaseOptions>>().Value;
+                if (logger != null)
+                {
+                    logger.LogInformation("connection string: " + dbOptions.ConnectionString);
+                }
                 options.UseNpgsql(dbOptions.ConnectionString);
             });
 

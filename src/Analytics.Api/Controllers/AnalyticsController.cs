@@ -10,13 +10,13 @@ namespace Analytics.Api.Controllers
     public class AnalyticsController : ControllerBase
     {
         private IAnalyticsService _analyticsService;
-        private readonly ILogger<AnalyticsController> _logger;        
+        private readonly ILogger<AnalyticsController> _logger;
 
         public AnalyticsController(
-            IAnalyticsService analyticsService,            
+            IAnalyticsService analyticsService,
             ILogger<AnalyticsController> logger)
         {
-            _analyticsService = analyticsService;            
+            _analyticsService = analyticsService;
             _logger = logger;
         }
 
@@ -73,7 +73,7 @@ namespace Analytics.Api.Controllers
 
         [HttpPost("track")]
         public async Task<IActionResult> TrackVisit([FromBody] VisitRequest request)
-        {            
+        {
             var ipAddress = GetClientIpAddress(HttpContext);
 
             var userAgent = Request.Headers["User-Agent"];
