@@ -51,8 +51,8 @@ jobs:
             # Pull the latest images
             docker compose pull
 
-            docker stack rm analytics-stack
-            sleep 10
+            #docker stack rm analytics-stack
+            #sleep 10
 
             # Deploy/Update the stack (this creates/updates services)
             docker stack deploy -c docker-compose.yml analytics-stack

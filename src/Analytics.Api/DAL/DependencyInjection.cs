@@ -19,10 +19,10 @@ namespace Analytics.Api.DAL
                 if (!env.IsDevelopment())
                 {
                     var cs = GetConnectionStringFromSecret();
-                    if (logger != null)
-                    {
-                        logger.LogInformation("connection string: " + cs);
-                    }
+                    //if (logger != null)
+                    //{
+                    //    logger.LogInformation("connection string: " + cs);
+                    //}
                     options.UseNpgsql(cs);
                 }
                 else
