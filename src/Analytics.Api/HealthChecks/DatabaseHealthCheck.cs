@@ -1,23 +1,39 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+﻿using Analytics.Api.DAL;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Analytics.Api.HealthChecks
 {
     public class DatabaseHealthCheck : IHealthCheck
     {
+        private readonly AnalyticsDbContext _dbContext;
+
+        public DatabaseHealthCheck(AnalyticsDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
         public async Task<HealthCheckResult> CheckHealthAsync(
             HealthCheckContext context,
             CancellationToken cancellationToken = default)
         {
-            bool isHealthy = await IsDatabaseConnectionOkAsync();
+            try
+            {
+                var canConnect = await _dbContext.Database
+                    .CanConnectAsync(cancellationToken);
 
-            return isHealthy
-                ? HealthCheckResult.Healthy("Database connection is OK")
-                : HealthCheckResult.Unhealthy("Database connection is ERROR");
-        }
+                if (canConnect)
+                {
+                    return HealthCheckResult.Healthy("Database connection is OK");
+                }
 
-        private Task<bool> IsDatabaseConnectionOkAsync()
-        {
-            return Task.FromResult(DateTime.Now.Second % 2 == 0);
+                return HealthCheckResult.Unhealthy("Database connection failed");
+            }
+            catch (Exception ex)
+            {
+                return HealthCheckResult.Unhealthy(
+                    "Database connection threw exception",
+                    ex);
+            }
         }
     }
 }
