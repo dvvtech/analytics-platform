@@ -1,10 +1,8 @@
 ﻿using Analytics.Api.AppStart.Extensions;
 using Analytics.Api.BLL.Abstract;
 using Analytics.Api.BLL.Services;
-using Analytics.Api.Configurations;
 using Analytics.Api.DAL;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Analytics.Api.HealthChecks;
 
 namespace Analytics.Api.AppStart
 {
@@ -34,6 +32,10 @@ namespace Analytics.Api.AppStart
             //InitConfigs();
             RegisterServices();
             SetupDb();
+
+            _builder.Services
+                .AddHealthChecks()
+                .AddCheck<DatabaseHealthCheck>(nameof(DatabaseHealthCheck));
 
             _builder.Services.AddControllers();
         }

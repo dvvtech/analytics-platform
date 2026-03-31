@@ -12,7 +12,7 @@ namespace Analytics.Api.DAL
 
             services.AddDbContextFactory<AnalyticsDbContext>((serviceProvider, options) =>
             {
-                var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
+                //var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
                 var dbOptions = serviceProvider.GetRequiredService<IOptions<DatabaseOptions>>().Value;
                 
                 var env = serviceProvider.GetRequiredService<IWebHostEnvironment>();
