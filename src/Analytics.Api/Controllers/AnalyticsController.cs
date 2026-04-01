@@ -43,7 +43,7 @@ namespace Analytics.Api.Controllers
             _logger.LogInformation("track-mpptests");
 
             var ipAddress = GetClientIpAddress(HttpContext);
-
+            _logger.LogInformation($"ip: {ipAddress}");
             var userAgent = Request.Headers["User-Agent"];
             var operation = Request.Headers["X-Operation-Type"];
 
