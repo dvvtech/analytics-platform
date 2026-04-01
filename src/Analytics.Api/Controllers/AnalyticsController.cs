@@ -122,7 +122,7 @@ namespace Analytics.Api.Controllers
         //    return Ok(stats);
         //}
 
-        public static string GetClientIpAddress(HttpContext context)
+        public string GetClientIpAddress(HttpContext context)
         {
             if (context == null) return null;
 
@@ -136,6 +136,11 @@ namespace Analytics.Api.Controllers
                 "X-Client-IP",             // Custom
                 "CF-Connecting-IP"        // Cloudflare                
             };
+
+            foreach (var header in context.Request.Headers)
+            {
+                _logger.LogInformation("Header: {Key} = {Value}", header.Key, header.Value.ToString());
+            }
 
             foreach (var key in headerKeys)
             {
@@ -153,6 +158,7 @@ namespace Analytics.Api.Controllers
             if (string.IsNullOrEmpty(ipAddress))
             {
                 ipAddress = context.Connection.RemoteIpAddress?.ToString();
+                _logger.LogInformation("Using RemoteIpAddress: {IP}", ipAddress);
             }
 
             // Очистка IP
