@@ -30,7 +30,7 @@ namespace Analytics.Api.Controllers
             var userAgent = Request.Headers["User-Agent"];
             var link = Request.Headers["X-Operation-Link"];
 
-            _logger.LogInformation($"userAgent: {userAgent}");
+            //_logger.LogInformation($"userAgent: {userAgent}");
 
             await _analyticsService.TrackVisitLinkSummaryAsync(ipAddress, userAgent, link);
 

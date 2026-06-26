@@ -55,6 +55,7 @@ namespace Analytics.Api.AppStart
         {
             _builder.Services.AddDAL(_builder.Configuration);
         }
+
         private void RegisterServices()
         {            
             _builder.Services.AddHttpClient("IpApi", client =>
